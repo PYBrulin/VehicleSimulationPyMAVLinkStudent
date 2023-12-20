@@ -1,0 +1,11 @@
+future 
+lxml
+pymavlink
+geographiclib
+geopy
+numpy
+matplotlib
+pyqtgraph
+black # for formatting
+flake8 # for linting
+isort # for sorting imports
