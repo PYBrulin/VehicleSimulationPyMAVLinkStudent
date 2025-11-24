@@ -6,6 +6,8 @@ geopy
 numpy
 matplotlib
 pyqtgraph
+
+pre-commit # for managing pre-commit hooks
 black # for formatting
 flake8 # for linting
 isort # for sorting imports

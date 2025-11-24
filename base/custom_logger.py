@@ -44,8 +44,6 @@ def setup_logger(debug: bool = False) -> None:
 
     def exception_hook(exc_type, exc_value, exc_traceback) -> None:
         """Allows to catch all uncaught exception in the log"""
-        logging.critical(
-            "Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback)
-        )
+        logging.critical("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
 
     sys.excepthook = exception_hook

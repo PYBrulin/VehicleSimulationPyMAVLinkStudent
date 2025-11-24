@@ -1,8 +1,8 @@
-import logging
-import time
+import logging  # noqa: F401
+import time  # noqa: F401
 
-import geopy
-import geopy.distance
+import geopy  # noqa: F401
+import geopy.distance  # noqa: F401
 from pymavlink import mavutil
 
 import base.simulator as simulator  # noqa : F401

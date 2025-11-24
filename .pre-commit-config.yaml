@@ -1,0 +1,43 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+        files: ".*\\.(?:tex|py)$"
+        exclude: '^SITL/'
+      - id: check-merge-conflict
+        exclude: '^SITL/'
+      - id: check-case-conflict
+        exclude: '^SITL/'
+      - id: check-yaml
+        exclude: '^SITL/'
+      - id: end-of-file-fixer
+        exclude: '^SITL/'
+      - id: name-tests-test
+        exclude: '^SITL/'
+
+  - repo: https://github.com/pycqa/isort
+    rev: 7.0.0
+    hooks:
+      - id: isort
+        args: ["--profile", "black", "--filter-files"]
+        exclude: '^SITL/'
+
+  - repo: https://github.com/psf/black
+    rev: 25.11.0
+    hooks:
+      - id: black
+        exclude: '^SITL/'
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.3.0
+    hooks:
+      - id: flake8
+        exclude: '^SITL/'
+
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.21.2
+    hooks:
+      - id: pyupgrade
+        exclude: '(^site-pacakges/|^SITL/)'
+        args: ["--py310-plus"]

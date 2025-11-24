@@ -1,0 +1,12 @@
+[tool.isort]
+known_first_party = "src"
+atomic = true
+line_length = 128
+multi_line_output = 3
+use_parentheses = true
+include_trailing_comma = true
+force_grid_wrap = 0
+
+[tool.black]
+skip-string-normalization = true
+line-length = 128

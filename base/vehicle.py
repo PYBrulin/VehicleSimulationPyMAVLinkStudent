@@ -1,6 +1,5 @@
 import logging
 from threading import Thread
-from typing import Union
 
 import pymavlink
 from pymavlink import mavutil
@@ -23,6 +22,63 @@ class Vehicle:
         self._alive = False
         self.data = {}
         self.parameters = {}
+
+    def parse_msg(self, msg: pymavlink.mavutil.mavlink.MAVLink) -> None:
+        """Parse a message from the vehicle"""
+        # msg = self.vehicle_conn.recv_match(blocking=False, timeout=1)
+        if not msg:
+            return
+
+        if msg.get_srcSystem() != 1 or msg.get_srcComponent() != 1:
+            # Ignore messages not from the autopilot
+            return
+
+        if msg.get_type() == "BAD_DATA":
+            # Ignore bad data
+            self.logger.warning("Received bad data")
+
+        elif msg.get_type() == "STATUSTEXT":
+            # Get severity
+            severity = msg.to_dict().get("severity")
+            # MAV_SEVERITY_EMERGENCY = 0
+            # MAV_SEVERITY_ALERT = 1
+            # MAV_SEVERITY_CRITICAL = 2
+            # MAV_SEVERITY_ERROR = 3
+            # MAV_SEVERITY_WARNING = 4
+            # MAV_SEVERITY_NOTICE = 5
+            # MAV_SEVERITY_INFO = 6
+            # MAV_SEVERITY_DEBUG = 7
+            if severity == mavutil.mavlink.MAV_SEVERITY_DEBUG:
+                self.logger.debug(msg.to_dict().get("text"))
+            elif severity == mavutil.mavlink.MAV_SEVERITY_INFO:
+                self.logger.info(msg.to_dict().get("text"))
+            elif severity in [
+                mavutil.mavlink.MAV_SEVERITY_NOTICE,
+                mavutil.mavlink.MAV_SEVERITY_WARNING,
+            ]:
+                self.logger.warning(msg.to_dict().get("text"))
+            elif severity == mavutil.mavlink.MAV_SEVERITY_ERROR:
+                self.logger.error(msg.to_dict().get("text"))
+            elif severity in [
+                mavutil.mavlink.MAV_SEVERITY_CRITICAL,
+                mavutil.mavlink.MAV_SEVERITY_ALERT,
+                mavutil.mavlink.MAV_SEVERITY_EMERGENCY,
+            ]:
+                self.logger.critical(msg.to_dict().get("text"))
+
+        elif msg.get_type() == "PARAM_VALUE":
+            # Store parameter value
+            param_id = msg.to_dict().get("param_id")
+            param_value = msg.to_dict().get("param_value")
+            self.parameters[param_id] = param_value
+
+        else:
+            self.logger.debug(f"Received {msg.get_type()} message")
+
+            # Replace the data in the dictionary
+            self.data[msg.get_type()] = msg.to_dict()
+
+    # region Properties
 
     @property
     def attitude(self):
@@ -102,10 +158,7 @@ class Vehicle:
     @property
     def armed(self):
         """Return the vehicle's armed state"""
-        return (
-            self.heartbeat.get("base_mode", 0)
-            & mavutil.mavlink.MAV_MODE_FLAG_SAFETY_ARMED
-        ) != 0
+        return (self.heartbeat.get("base_mode", 0) & mavutil.mavlink.MAV_MODE_FLAG_SAFETY_ARMED) != 0
 
     @property
     def mode(self):
@@ -120,12 +173,12 @@ class Vehicle:
         return "Unknown"
 
     @mode.setter
-    def mode(self, mode: Union[int, str]):
+    def mode(self, mode: int | str):
         """Set the vehicle's mode"""
         if isinstance(mode, str):
             # Check if mode is available
             if mode not in self.vehicle_conn.mode_mapping():
-                print("Unknown mode : {}".format(mode))
+                print(f"Unknown mode : {mode}")
                 print("Try:", list(self.vehicle_conn.mode_mapping().keys()))
             mode_id = self.vehicle_conn.mode_mapping()[mode]
         else:
@@ -142,60 +195,7 @@ class Vehicle:
         """Return the vehicle's current waypoint"""
         return self.data.get("MISSION_CURRENT", {}).get("total", 0)
 
-    def parse_msg(self, msg: pymavlink.mavutil.mavlink.MAVLink) -> None:
-        """Parse a message from the vehicle"""
-        # msg = self.vehicle_conn.recv_match(blocking=False, timeout=1)
-        if not msg:
-            return
-
-        if msg.get_srcSystem() != 1 or msg.get_srcComponent() != 1:
-            # Ignore messages not from the autopilot
-            return
-
-        if msg.get_type() == "BAD_DATA":
-            # Ignore bad data
-            self.logger.warning("Received bad data")
-
-        elif msg.get_type() == "STATUSTEXT":
-            # Get severity
-            severity = msg.to_dict().get("severity")
-            # MAV_SEVERITY_EMERGENCY = 0
-            # MAV_SEVERITY_ALERT = 1
-            # MAV_SEVERITY_CRITICAL = 2
-            # MAV_SEVERITY_ERROR = 3
-            # MAV_SEVERITY_WARNING = 4
-            # MAV_SEVERITY_NOTICE = 5
-            # MAV_SEVERITY_INFO = 6
-            # MAV_SEVERITY_DEBUG = 7
-            if severity == mavutil.mavlink.MAV_SEVERITY_DEBUG:
-                self.logger.debug(msg.to_dict().get("text"))
-            elif severity == mavutil.mavlink.MAV_SEVERITY_INFO:
-                self.logger.info(msg.to_dict().get("text"))
-            elif severity in [
-                mavutil.mavlink.MAV_SEVERITY_NOTICE,
-                mavutil.mavlink.MAV_SEVERITY_WARNING,
-            ]:
-                self.logger.warning(msg.to_dict().get("text"))
-            elif severity == mavutil.mavlink.MAV_SEVERITY_ERROR:
-                self.logger.error(msg.to_dict().get("text"))
-            elif severity in [
-                mavutil.mavlink.MAV_SEVERITY_CRITICAL,
-                mavutil.mavlink.MAV_SEVERITY_ALERT,
-                mavutil.mavlink.MAV_SEVERITY_EMERGENCY,
-            ]:
-                self.logger.critical(msg.to_dict().get("text"))
-
-        elif msg.get_type() == "PARAM_VALUE":
-            # Store parameter value
-            param_id = msg.to_dict().get("param_id")
-            param_value = msg.to_dict().get("param_value")
-            self.parameters[param_id] = param_value
-
-        else:
-            self.logger.debug(f"Received {msg.get_type()} message")
-
-            # Replace the data in the dictionary
-            self.data[msg.get_type()] = msg.to_dict()
+    # endregion Properties
 
     # region Thread
     def thread_in(self) -> None:

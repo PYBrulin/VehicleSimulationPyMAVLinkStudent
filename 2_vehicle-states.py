@@ -37,16 +37,16 @@ try:
         # time.sleep(0.1)  # 10Hz
 
     print("\nVehicle state:")
-    print("\tAttitude: {}".format(vehicle.attitude))
-    print("\tBattery: {}".format(vehicle.battery))
-    print("\tGlobal position: {}".format(vehicle.global_position))
-    print("\tGPS raw: {}".format(vehicle.gps_raw_int))
-    print("\tHeartbeat: {}".format(vehicle.heartbeat))
-    print("\tHome position: {}".format(vehicle.home_position))
-    print("\tLocal position: {}".format(vehicle.local_position))
+    print(f"\tAttitude: {vehicle.attitude}")
+    print(f"\tBattery: {vehicle.battery}")
+    print(f"\tGlobal position: {vehicle.global_position}")
+    print(f"\tGPS raw: {vehicle.gps_raw_int}")
+    print(f"\tHeartbeat: {vehicle.heartbeat}")
+    print(f"\tHome position: {vehicle.home_position}")
+    print(f"\tLocal position: {vehicle.local_position}")
     print()
-    print("\tArmed: {}".format(vehicle.armed))
-    print("\tMode: {}".format(vehicle.mode))
+    print(f"\tArmed: {vehicle.armed}")
+    print(f"\tMode: {vehicle.mode}")
 
 
 except Exception as e:

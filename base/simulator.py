@@ -6,22 +6,9 @@ class Simulator:
     """A class to start and terminate a SITL instance as a subprocess"""
 
     def __init__(self) -> None:
-        self.executable = os.path.abspath(
-            os.path.join(
-                os.path.dirname(__file__),
-                "..",
-                "SITL",
-                "apm.exe",
-            )
-        )
+        self.executable = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "SITL", "apm.exe"))
         self.param_file = os.path.abspath(
-            os.path.join(
-                os.path.dirname(__file__),
-                "..",
-                "SITL",
-                "default_params",
-                "default.parm",
-            )
+            os.path.join(os.path.dirname(__file__), "..", "SITL", "default_params", "default.parm")
         )
         self.process = None
 
@@ -29,13 +16,7 @@ class Simulator:
         # Start SITL instance in external console
         # Starts with arguments '-Mx' by default (model quadcopter)
         self.process = subprocess.Popen(
-            " ".join(
-                [
-                    f'"{self.executable}"',
-                    "-Mx",
-                    f'--defaults "{self.param_file}"',
-                ]
-            ),
+            " ".join([f'"{self.executable}"', "-Mx", f'--defaults "{self.param_file}"']),
             creationflags=subprocess.CREATE_NEW_CONSOLE,
         )
 

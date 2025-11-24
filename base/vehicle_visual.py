@@ -1,7 +1,8 @@
+import math
 from math import cos, radians, sin
 
 import matplotlib.pyplot as plt
-import math
+
 from .sim_balise import SimBalise
 from .vehicle import Vehicle
 
@@ -57,9 +58,7 @@ class VehicleVisual:
 
         # Basic approximation
         if self.vehicle.latitude_home != 0 and self.vehicle.longitude != 0:
-            north, east = self.latlon_approximation(
-                self.vehicle.latitude, self.vehicle.longitude
-            )
+            north, east = self.latlon_approximation(self.vehicle.latitude, self.vehicle.longitude)
             self.update(north, east)
 
         self.ax.plot(self.y_data, self.x_data, "b:")

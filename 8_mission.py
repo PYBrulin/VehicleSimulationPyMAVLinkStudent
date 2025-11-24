@@ -176,9 +176,7 @@ try:
 
     # Run mission until complete
     while vehicle.armed:
-        print(
-            f"Mission sequence running: {vehicle.waypoint_seq}/{vehicle.waypoint_total}"
-        )
+        print(f"Mission sequence running: {vehicle.waypoint_seq}/{vehicle.waypoint_total}")
         time.sleep(1)
 
     print("Disarmed!")

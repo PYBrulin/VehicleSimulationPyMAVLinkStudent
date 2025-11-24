@@ -1,7 +1,6 @@
 import logging
 import math
 import random
-from typing import Optional, Tuple
 
 import geopy.distance
 
@@ -80,14 +79,8 @@ class SimBalise:
         """
         _detected = (
             geopy.distance.GeodesicDistance(
-                (
-                    self.victim.latitude,
-                    self.victim.longitude,
-                ),
-                (
-                    self.vehicle.latitude,
-                    self.vehicle.longitude,
-                ),
+                (self.victim.latitude, self.victim.longitude),
+                (self.vehicle.latitude, self.vehicle.longitude),
             ).meters
             < 250  # meters
         )
@@ -99,7 +92,7 @@ class SimBalise:
             self.has_been_detected = False
         return _detected
 
-    def victim_orientation(self) -> Optional[int]:
+    def victim_orientation(self) -> int | None:
         """Returns the victim bearing from the vehicle position,
         only if the victim is within an 90 meters radius
 
@@ -109,14 +102,8 @@ class SimBalise:
         """
         if (
             geopy.distance.GeodesicDistance(
-                (
-                    self.victim.latitude,
-                    self.victim.longitude,
-                ),
-                (
-                    self.vehicle.latitude,
-                    self.vehicle.longitude,
-                ),
+                (self.victim.latitude, self.victim.longitude),
+                (self.vehicle.latitude, self.vehicle.longitude),
             ).meters
             < 90  # meters
         ):
@@ -134,7 +121,7 @@ class SimBalise:
             self.has_orientation = False
         return None
 
-    def random_location(self) -> Tuple[float, float, float]:
+    def random_location(self) -> tuple[float, float, float]:
         """Returns a random location within the Region-Of-Interest
 
         Returns:
@@ -160,9 +147,7 @@ class SimBalise:
         """
         dLon = lon2 - lon1
         y = math.sin(dLon) * math.cos(lat2)
-        x = math.cos(lat1) * math.sin(lat2) - math.sin(lat1) * math.cos(
-            lat2
-        ) * math.cos(dLon)
+        x = math.cos(lat1) * math.sin(lat2) - math.sin(lat1) * math.cos(lat2) * math.cos(dLon)
         brng = math.degrees(math.atan2(y, x))
         if brng < 0:
             brng += 360
