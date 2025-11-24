@@ -1,3 +1,4 @@
+import logging
 import math
 import random
 from typing import Optional, Tuple
@@ -5,7 +6,6 @@ from typing import Optional, Tuple
 import geopy.distance
 
 from .vehicle import Vehicle
-import logging
 
 
 class Victim:

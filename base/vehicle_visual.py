@@ -1,7 +1,7 @@
 from math import cos, radians, sin
 
 import matplotlib.pyplot as plt
-
+import math
 from .sim_balise import SimBalise
 from .vehicle import Vehicle
 
@@ -82,24 +82,30 @@ class VehicleVisual:
                 e.append(_e)
             self.ax.plot(e, n, "g--")
 
-        if self.x_data and self.y_data:
-            self.ax.arrow(
-                self.y_data[-1],
-                self.x_data[-1],
-                self.size * sin(self.vehicle.heading),
-                self.size * cos(self.vehicle.heading),
-                head_width=0.05,
-                head_length=0.1,
+            # Draw circle around victim
+            circle2 = plt.Circle(
+                (east, north),
+                250,
+                color="g",
+                fill=False,
             )
-        else:
-            self.ax.arrow(
-                self.y,
-                self.x,
-                self.size * sin(self.vehicle.heading),
-                self.size * cos(self.vehicle.heading),
-                head_width=0.05,
-                head_length=0.1,
+            circle1 = plt.Circle(
+                (east, north),
+                90,
+                color="r",
+                fill=False,
             )
+            self.ax.add_artist(circle1)
+            self.ax.add_artist(circle2)
+
+        self.ax.arrow(
+            self.y_data[-1] if self.x_data else self.x,
+            self.x_data[-1] if self.x_data else self.y,
+            self.size * sin(math.radians(self.vehicle.heading)),
+            self.size * cos(math.radians(self.vehicle.heading)),
+            head_width=4 * self.size,
+            head_length=10 * self.size,
+        )
         plt.axis("equal")
         plt.xlabel("East")
         plt.ylabel("North")

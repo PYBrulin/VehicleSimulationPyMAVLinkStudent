@@ -1,7 +1,6 @@
 import time
 
-from pymavlink import mavutil
-from pymavlink import mavwp
+from pymavlink import mavutil, mavwp
 
 import base.simulator as simulator  # noqa : F401
 from base.custom_logger import setup_logger
@@ -146,9 +145,9 @@ try:
         # Ensure mode is guided
         if vehicle.mode != "GUIDED":
             vehicle.mode = "GUIDED"
-
-        # Send arm command
-        vehicle.arm()
+        else:
+            # Send arm command
+            vehicle.arm()
 
         time.sleep(2)
 
