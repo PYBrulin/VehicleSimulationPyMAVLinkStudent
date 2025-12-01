@@ -100,8 +100,8 @@ class VehicleVisual:
         self.ax.arrow(
             self.y_data[-1] if self.x_data else self.x,
             self.x_data[-1] if self.x_data else self.y,
-            self.size * sin(math.radians(self.vehicle.heading)),
-            self.size * cos(math.radians(self.vehicle.heading)),
+            self.size * sin(self.vehicle.heading),
+            self.size * cos(self.vehicle.heading),
             head_width=4 * self.size,
             head_length=10 * self.size,
         )

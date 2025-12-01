@@ -87,7 +87,7 @@ class Vehicle:
 
     @property
     def heading(self):
-        """Return the vehicle's heading"""
+        """Return the vehicle's heading in radians"""
         return self.attitude.get("yaw", 0)
 
     @property
@@ -248,7 +248,7 @@ class Vehicle:
 
     def takeoff(self, altitude: float) -> None:
         """Takeoff to a specified altitude"""
-        # create the TAKEOFF command
+        # create the TAKEOFF command using command_long_encode()
         # fmt: off
         pass  # ...
         # fmt: on

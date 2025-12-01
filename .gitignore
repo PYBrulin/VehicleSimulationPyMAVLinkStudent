@@ -7,6 +7,15 @@
 **/logs/
 **/terrain/
 
+# SITL downloaded files
+SITL/*.elf
+SITL/*.exe
+SITL/arducopter
+SITL/*.dll
+SITL/default.parm
+SITL/default_eeprom.bin
+SITL/*.py
+
 # Python 
 
 ## Byte-compiled / optimized / DLL files

@@ -89,7 +89,20 @@ MOT_BAT_VOLT_MAX 12.8
 # POSITION 		8
 # LAND 			9 !
 
-# STREAM RATE (https://ardupilot.org/dev/docs/mavlink-requesting-data.html)
+# (New) MAVLINK RATE
+MAV1_ADSB        0
+MAV1_EXTRA1      4
+MAV1_EXTRA2      4
+MAV1_EXTRA3      2
+MAV1_EXT_STAT    2
+MAV1_OTPIONS     0
+MAV1_PARAMS      0
+MAV1_POSITION    2
+MAV1_RAW_CTRL    0
+MAV1_RAW_SENS    2
+MAV1_RC_CHANNEL  2
+
+# (Legacy) STREAM RATE (https://ardupilot.org/dev/docs/mavlink-requesting-data.html)
 SR0_EXTRA1      2
 SR0_EXT_STAT    2
 SR0_EXTRA3      2
