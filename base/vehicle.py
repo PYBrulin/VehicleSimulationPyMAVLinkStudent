@@ -195,6 +195,16 @@ class Vehicle:
         """Return the vehicle's current waypoint"""
         return self.data.get("MISSION_CURRENT", {}).get("total", 0)
 
+    def set_parameter(self, name: str, value: float) -> None:
+        """Set a parameter on the vehicle via MAVLink"""
+        self.vehicle_conn.mav.param_set_send(
+            self.vehicle_conn.target_system,
+            self.vehicle_conn.target_component,
+            name.encode("utf-8"),
+            value,
+            mavutil.mavlink.MAV_PARAM_TYPE_REAL32,
+        )
+
     # endregion Properties
 
     # region Thread

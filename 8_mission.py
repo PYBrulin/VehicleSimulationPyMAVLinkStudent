@@ -7,7 +7,7 @@ from base.custom_logger import setup_logger
 from base.vehicle import Vehicle
 
 # Setup logger
-setup_logger(debug=True)
+setup_logger(debug=False)
 
 print("Trying to connect to the vehicle...")
 conn = mavutil.mavlink_connection("tcp:127.0.0.1:5760")

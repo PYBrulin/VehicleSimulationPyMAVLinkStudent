@@ -1,4 +1,3 @@
-import math
 from math import cos, radians, sin
 
 import matplotlib.pyplot as plt
