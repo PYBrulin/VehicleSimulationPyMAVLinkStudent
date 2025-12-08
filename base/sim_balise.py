@@ -110,12 +110,19 @@ class SimBalise:
             if not self.has_orientation:
                 self.logger.info("[SimBalise] Victim Orientation Found!")
                 self.has_orientation = True
-            return self.vehicle.heading - self.get_bearing(
+            # Calculate relative bearing
+            bearing = self.get_bearing(
                 self.vehicle.latitude,
                 self.vehicle.longitude,
                 self.victim.latitude,
                 self.victim.longitude,
-            )
+            ) - math.degrees(self.vehicle.heading)
+            # Normalize to [-180, 180]
+            while bearing > 180:
+                bearing -= 360
+            while bearing < -180:
+                bearing += 360
+            return bearing
         elif self.has_orientation:
             self.logger.warning("[SimBalise] Victim Orientation Lost!")
             self.has_orientation = False
@@ -137,18 +144,22 @@ class SimBalise:
         """Calculate bearing between two set of coordinates
 
         Args:
-            lat1 (float): Latitude of first set of coordinates
-            lon1 (float): Longitude of first set of coordinates
-            lat2 (float): Latitude of second set of coordinates
-            lon2 (float): Longitude of second set of coordinates
+            lat1 (float): Latitude of first set of coordinates in degrees
+            lon1 (float): Longitude of first set of coordinates in degrees
+            lat2 (float): Latitude of second set of coordinates in degrees
+            lon2 (float): Longitude of second set of coordinates in degrees
 
         Returns:
-            float: Bearing in degrees
+            float: Bearing in degrees (0-360, where 0/360 is North, 90 is East)
         """
-        dLon = lon2 - lon1
-        y = math.sin(dLon) * math.cos(lat2)
-        x = math.cos(lat1) * math.sin(lat2) - math.sin(lat1) * math.cos(lat2) * math.cos(dLon)
+        # Convert to radians
+        lat1_rad = math.radians(lat1)
+        lat2_rad = math.radians(lat2)
+        dLon_rad = math.radians(lon2 - lon1)
+
+        y = math.sin(dLon_rad) * math.cos(lat2_rad)
+        x = math.cos(lat1_rad) * math.sin(lat2_rad) - math.sin(lat1_rad) * math.cos(lat2_rad) * math.cos(dLon_rad)
         brng = math.degrees(math.atan2(y, x))
-        if brng < 0:
-            brng += 360
+        # Normalize to 0-360
+        brng = (brng + 360) % 360
         return brng
