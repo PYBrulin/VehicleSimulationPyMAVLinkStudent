@@ -22,12 +22,21 @@ class Vehicle:
         self._alive = False
         self.data = {}
         self.parameters = {}
+        self.message_listeners = []
+
+    def add_message_listener(self, callback) -> None:
+        """Register a callback invoked with every raw message received, regardless of
+        source system/component, so callers don't need a second reader on the connection"""
+        self.message_listeners.append(callback)
 
     def parse_msg(self, msg: pymavlink.mavutil.mavlink.MAVLink) -> None:
         """Parse a message from the vehicle"""
         # msg = self.vehicle_conn.recv_match(blocking=False, timeout=1)
         if not msg:
             return
+
+        for callback in self.message_listeners:
+            callback(msg)
 
         if msg.get_srcSystem() != 1 or msg.get_srcComponent() != 1:
             # Ignore messages not from the autopilot

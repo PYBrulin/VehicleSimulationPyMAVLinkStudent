@@ -170,14 +170,15 @@ class Simulator:
 
         # Start SITL instance in external console
         # Starts with arguments '-Mx' by default (model quadcopter)
+        # --serial0 tcp:0 creates a TCP server on port 5760
         if self.platform_info["is_windows"]:
             self.process = subprocess.Popen(
-                " ".join([f'"{self.executable}"', "-Mx", f'--defaults "{self.param_file}"']),
+                " ".join([f'"{self.executable}"', "-Mx", f'--defaults "{self.param_file}"', "--serial0 tcp:0"]),
                 creationflags=subprocess.CREATE_NEW_CONSOLE,
             )
         else:
             # For Linux, just run the process directly
-            self.process = subprocess.Popen([self.executable, "-Mx", "--defaults", self.param_file])
+            self.process = subprocess.Popen([self.executable, "-Mx", "--defaults", self.param_file, "--serial0", "tcp:0"])
             logger.info(f"Started SITL process (PID: {self.process.pid})")
 
     def terminate(self) -> None:

@@ -6,6 +6,14 @@ The scripts are designed for educational purposes with fill-in code sections for
 
 ## Prerequisites
 
+### First-time setup
+
+Clone (or update) the submodule if you haven't already. The prebuilt tooltip UI assets the dashboard needs (`modules/build/`) are plain tracked files, so a non-recursive init is enough — no need to build anything:
+
+```bash
+git submodule update --init external/WebTools
+```
+
 ### Virtual Environment Setup
 
 Before running the scripts, set up a Python virtual environment to manage dependencies. You can create a virtual environment using the following commands:
@@ -30,8 +38,11 @@ pip install -r requirements.txt
 - `custom_logger.py`: Custom logger to display better looking logs.
 - (BE) `sim_balise.py`: SimBalise class
 - (BE) `vehicle_visual.py`: VehicleVisual class
+- `telemetry_dashboard.py`: TelemetryDashboard class to serve the ArduPilot WebTools TelemetryDashboard and stream live telemetry (and the SimBalise position) to it, see [Live Telemetry Dashboard](#live-telemetry-dashboard).
 
 `SITL/`: Contains the ArduCopter SITL (Software In The Loop) simulation files.
+
+`external/WebTools/`: Git submodule of the [ArduPilot WebTools](https://github.com/ArduPilot/WebTools) suite (a fork), used for the `TelemetryDashboard` browser-based telemetry viewer.
 
 1. `1_vehicle-connection.py`: Simple script to connect to the vehicle simulation and print received messages.
 2. `2_vehicle-states.py`: Script to receive several MAVLink messages and print vehicle states.
@@ -40,4 +51,4 @@ pip install -r requirements.txt
 5. `5_arm_disarm_thread.py`: Script to use a thread loop to handle MAVLink messages to distinguish between MAVLink RxTx and user's application.
 6. `6_takeoff_land.py`: Script to perform a takeoff maneuver.
 7. `7_goto.py`: Script to perform a takeoff and go to a specified GPS location.
-8. `8_mission.py`: Script to upload and execute a mission.
+8. `8_mission.py`: Scripts to upload and execute a mission.

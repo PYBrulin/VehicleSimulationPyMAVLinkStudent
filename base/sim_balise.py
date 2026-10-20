@@ -64,25 +64,37 @@ class SimBalise:
 
     logger = logging.getLogger(__name__)
 
-    def __init__(self, vehicle: Vehicle) -> None:
+    DETECTION_RADIUS_M = 250
+    ORIENTATION_RADIUS_M = 90
+
+    def __init__(self, vehicle: Vehicle, map_scale: float = 1.0) -> None:
         self.vehicle = vehicle  # Access to vehicle object to get position
-        self.ROI = [(-35.3664632, 149.1551757), (-35.3718524, 149.1622996)]
+
+        offset_lat_600m = 0.005395932 * map_scale
+        offset_lon_800m = 0.007194576 * map_scale
+
+        self.top_right = (-35.3664632, 149.1622996)
+        # self.btm_left = (-35.3718524, 149.1551757)
+        self.btm_left = (self.top_right[0] - offset_lat_600m, self.top_right[1] - offset_lon_800m)
+
+        self.ROI = [self.top_right, self.btm_left]
+
         self.victim = Victim(*self.random_location())
         self.has_been_detected = False
         self.has_orientation = False
 
     def victim_detected(self) -> bool:
-        """Returns wether the victim balise has been detected within a 250 meters radius
+        """Returns wether the victim balise has been detected within the detection radius
 
         Returns:
-            bool: Victim is within a 250 meters radius
+            bool: Victim is within the detection radius
         """
         _detected = (
             geopy.distance.GeodesicDistance(
                 (self.victim.latitude, self.victim.longitude),
                 (self.vehicle.latitude, self.vehicle.longitude),
             ).meters
-            < 250  # meters
+            < self.DETECTION_RADIUS_M
         )
         if _detected and not self.has_been_detected:
             self.logger.info("[SimBalise] Victim Detected!")
@@ -92,12 +104,12 @@ class SimBalise:
             self.has_been_detected = False
         return _detected
 
-    def victim_orientation(self) -> int | None:
+    def victim_orientation(self) -> float | None:
         """Returns the victim bearing from the vehicle position,
-        only if the victim is within an 90 meters radius
+        only if the victim is within the orientation radius
 
         Returns:
-            Optional[int]: bearing between vehicle position and victim position,
+            Optional[float]: relative bearing between vehicle position and victim position,
                            or None if the victim has not been found
         """
         if (
@@ -105,7 +117,7 @@ class SimBalise:
                 (self.victim.latitude, self.victim.longitude),
                 (self.vehicle.latitude, self.vehicle.longitude),
             ).meters
-            < 90  # meters
+            < self.ORIENTATION_RADIUS_M
         ):
             if not self.has_orientation:
                 self.logger.info("[SimBalise] Victim Orientation Found!")

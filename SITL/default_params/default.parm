@@ -41,12 +41,31 @@ RC7_TRIM        1500.000000
 RC8_MAX         2000.000000
 RC8_MIN         1000.000000
 RC8_TRIM        1500.000000
+
+# flightmodes
+# switch 1 Circle
+# switch 2 LAND
+# switch 3 RTL
+# switch 4 Auto
+# switch 5 Loiter
+# switch 6 Stab
+# STABILIZE 	0 !
+# ACRO 			1
+# ALT_HOLD 		2
+# AUTO 			3 !
+# GUIDED 		4
+# LOITER 		5 !
+# RTL 			6 !
+# CIRCLE 		7 !
+# POSITION 		8
+# LAND 			9 !
 FLTMODE1        7
 FLTMODE2        9
 FLTMODE3        6
 FLTMODE4        3
 FLTMODE5        5
 FLTMODE6		0
+
 SIM_BARO_RND    0
 # we need small INS_ACC offsets so INS is recognised as being calibrated
 INS_ACCOFFS_X   0.001
@@ -71,23 +90,8 @@ MOT_THST_EXPO   0.65
 MOT_THST_HOVER  0.39
 MOT_BAT_VOLT_MIN 9.6
 MOT_BAT_VOLT_MAX 12.8
-# flightmodes
-# switch 1 Circle
-# switch 2 LAND
-# switch 3 RTL
-# switch 4 Auto
-# switch 5 Loiter
-# switch 6 Stab
-# STABILIZE 	0 !
-# ACRO 			1
-# ALT_HOLD 		2
-# AUTO 			3 !
-# GUIDED 		4
-# LOITER 		5 !
-# RTL 			6 !
-# CIRCLE 		7 !
-# POSITION 		8
-# LAND 			9 !
+WP_YAW_BEHAVIOR  1
+
 
 # (New) MAVLINK RATE
 MAV1_ADSB        0
@@ -109,4 +113,3 @@ SR0_EXTRA3      2
 SR0_POSITION    5
 
 SIM_SPEEDUP 1
-# SIM_SPEEDUP 5
